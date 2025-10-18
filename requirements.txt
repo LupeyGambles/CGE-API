@@ -1,3 +1,7 @@
 fastapi==0.119.0
 uvicorn==0.23.2
-git+https://github.com/ValvePython/steam#egg=steam
+git+https://github.com/ValvePython/valve.git@main#egg=valve
+requests>=2.9.1
+pycryptodomex>=3.7.0
+vdf>=3.3
+cachetools>=3.0.0
