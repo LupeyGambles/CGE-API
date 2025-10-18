@@ -1,3 +1,4 @@
-fastapi
-uvicorn[standard]
-valve-python
+fastapi==0.119.0
+uvicorn==0.23.2
+valve-python==0.2.3
+requests==2.31.0
