@@ -1,4 +1,3 @@
 fastapi==0.119.0
 uvicorn==0.23.2
-some-other-package==1.0.0
 git+https://github.com/ValvePython/steam#egg=steam
