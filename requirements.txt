@@ -1,6 +1,4 @@
 fastapi==0.119.0
 uvicorn==0.23.2
-requests==2.31.0
-# Use the latest code from ValvePython main branch
-pip install "git+https://github.com/ValvePython/steam#egg=steam"
-
+some-other-package==1.0.0
+git+https://github.com/ValvePython/steam#egg=steam
