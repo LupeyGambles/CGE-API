@@ -18,58 +18,48 @@ SERVER_PORT = 22913
 
 @app.get("/serverinfo")
 def get_server_info():
-    socket.setdefaulttimeout(5)  # Give server more time for slow maps
+    socket.setdefaulttimeout(5)
 
     try:
         info = a2s.info((SERVER_IP, SERVER_PORT))
+        map_name = getattr(info, "map_name", "Unknown")
+        server_name = getattr(info, "server_name", "Unknown")
+        player_count = getattr(info, "player_count", "Unknown")
+        max_players = getattr(info, "max_players", "Unknown")
+        game = getattr(info, "game", "Unknown")
+        version = getattr(info, "version", "Unknown")
+        password_protected = getattr(info, "password_protected", False)
 
-        # If map info is missing, return "unknown"
-        map_name = getattr(info, "map_name", "unknown")
-
-        # Handle password-protected servers
-        if getattr(info, "password_protected", False):
-            return JSONResponse(content={
-                "server_name": getattr(info, "server_name", "cge7-193?"),
-                "map": map_name,
-                "players": getattr(info, "player_count", 0),
-                "max_players": getattr(info, "max_players", 0),
-                "game": getattr(info, "game", "unknown"),
-                "version": getattr(info, "version", "unknown"),
-                "password_protected": True,
-                "players_list":"password protected"
-            })
-
-        # Query players safely
+        # Try fetching players
         try:
             players = a2s.players((SERVER_IP, SERVER_PORT))
-            players_list = [{"name": p.name, "score": p.score, "duration": p.duration} for p in players]
-        except (socket.timeout, TimeoutError, a2s.BrokenMessageError):
-            # If player query fails, return empty list instead of breaking
-            players_list = []
+            if not players:
+                players_list = [{"name": "Unknown", "score": 0, "duration": 0}]
+            else:
+                players_list = [{"name": p.name or "Unknown", "score": p.score, "duration": p.duration} for p in players]
+        except Exception:
+            players_list = [{"name": "Unknown", "score": 0, "duration": 0}]
 
         return JSONResponse(content={
-            "server_name": getattr(info, "server_name", "cge7-193?"),
+            "server_name": server_name,
             "map": map_name,
-            "players": getattr(info, "player_count", 0),
-            "max_players": getattr(info, "max_players", 0),
-            "game": getattr(info, "game", "unknown"),
-            "version": getattr(info, "version", "unknown"),
-            "password_protected": False,
+            "players": player_count,
+            "max_players": max_players,
+            "game": game,
+            "version": version,
+            "password_protected": password_protected,
             "players_list": players_list
         })
 
-    except (socket.timeout, TimeoutError, a2s.BrokenMessageError):
-        # If server fails completely, return default unknowns
+    except Exception:
+        # If info query fails entirely, return Unknowns
         return JSONResponse(content={
-            "server_name": "cge7-193?",
-            "map": "unknown",
-            "players": 0,
-            "max_players": 0,
-            "game": "unknown",
-            "version": "unknown",
+            "server_name": "Unknown",
+            "map": "Unknown",
+            "players": "Unknown",
+            "max_players": "Unknown",
+            "game": "Unknown",
+            "version": "Unknown",
             "password_protected": False,
-            "players_list": []
+            "players_list": [{"name": "Unknown", "score": 0, "duration": 0}]
         }, status_code=504)
-
-    except Exception as e:
-        return JSONResponse(content={"error": str(e)}, status_code=500)
