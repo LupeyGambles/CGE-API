@@ -17,7 +17,7 @@ app.add_middleware(
 )
 
 SERVER_IP = "169.150.249.133"
-SERVER_PORT = 22912
+SERVER_PORT = 22913
 
 @app.get("/serverinfo")
 def get_server_info():
