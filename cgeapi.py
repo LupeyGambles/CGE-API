@@ -36,7 +36,7 @@ def get_server_info():
                 "game": getattr(info, "game", "unknown"),
                 "version": getattr(info, "version", "unknown"),
                 "password_protected": True,
-                "players_list": "Hidden (server is password protected)"
+                "players_list": players_list
             })
 
         # Query players safely
