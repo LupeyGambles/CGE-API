@@ -29,7 +29,7 @@ def get_server_info():
         # Handle password-protected servers
         if getattr(info, "password_protected", False):
             return JSONResponse(content={
-                "server_name": getattr(info, "server_name", "unknown"),
+                "server_name": getattr(info, "server_name", "cge7-193?"),
                 "map": map_name,
                 "players": getattr(info, "player_count", 0),
                 "max_players": getattr(info, "max_players", 0),
@@ -48,7 +48,7 @@ def get_server_info():
             players_list = []
 
         return JSONResponse(content={
-            "server_name": getattr(info, "server_name", "unknown"),
+            "server_name": getattr(info, "server_name", "cge7-193?"),
             "map": map_name,
             "players": getattr(info, "player_count", 0),
             "max_players": getattr(info, "max_players", 0),
@@ -61,7 +61,7 @@ def get_server_info():
     except (socket.timeout, TimeoutError, a2s.BrokenMessageError):
         # If server fails completely, return default unknowns
         return JSONResponse(content={
-            "server_name": "unknown",
+            "server_name": "cge7-193?",
             "map": "unknown",
             "players": 0,
             "max_players": 0,
